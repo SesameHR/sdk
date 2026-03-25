@@ -1,0 +1,56 @@
+{
+  "name": "@sesamehr/sdk",
+  "version": "0.2.0",
+  "description": "Official JavaScript/TypeScript SDK for the Sesame HR API",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./modules/*": {
+      "import": "./dist/modules/*.js",
+      "types": "./dist/modules/*.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "sesame",
+    "sesamehr",
+    "hr",
+    "human-resources",
+    "api",
+    "sdk",
+    "time-tracking"
+  ],
+  "author": "SesameHR",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SesameHR/sdk.git"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@sesamehr/oauth-client": "^1.0.4"
+  }
+}

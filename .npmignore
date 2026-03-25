@@ -1,0 +1,10 @@
+src/
+*.test.ts
+*.test.js
+tsconfig.json
+vitest.config.*
+.github/
+.gitignore
+node_modules/
+CLAUDE.md
+.claude/
