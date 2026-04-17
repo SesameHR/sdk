@@ -1,6 +1,6 @@
 {
   "name": "@sesamehr/sdk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Official JavaScript/TypeScript SDK for the Sesame HR API",
   "type": "module",
   "main": "./dist/index.js",

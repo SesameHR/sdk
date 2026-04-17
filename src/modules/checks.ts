@@ -54,6 +54,10 @@ export interface CheckRequestParams {
   checkIn: string
   checkOut?: string
   comment?: string
+  /** Check type. Defaults to 'work'. Use 'pause' to request a past-day break. */
+  type?: 'work' | 'pause'
+  /** Work break ID. Required when type is 'pause' (get it from breaks()). */
+  workBreakId?: string
 }
 
 export interface CheckRequestEntry {
@@ -64,6 +68,24 @@ export interface CheckRequestEntry {
 }
 
 const DEFAULT_COORDINATES: Coordinates = { latitude: 0.0001, longitude: 0.0001 }
+
+const REQUEST_TIMEZONE = 'Europe/Madrid'
+
+/**
+ * Build the structured timestamp payload the /check-request-for-* endpoints expect.
+ * Input: a local datetime string (e.g., "2026-04-16T13:00:00" or "2026-04-16 13:00").
+ * The string is interpreted as local time (server TZ). For accurate results, run the SDK
+ * in the same timezone as REQUEST_TIMEZONE or pass a fully-qualified ISO string with offset.
+ */
+function buildCheckTimestamp(datetime: string): { date: number; origin: string; timezone: string } {
+  const normalized = datetime.includes('T') ? datetime : datetime.replace(' ', 'T')
+  const ms = new Date(normalized).getTime()
+  return {
+    date: Math.floor(ms / 1000),
+    origin: 'request',
+    timezone: REQUEST_TIMEZONE,
+  }
+}
 
 const BASE_SELECT: BiSelectField[] = [
   { field: 'schedule_context_check.date', alias: 'date' },
@@ -215,14 +237,15 @@ export class ChecksModule {
     })
   }
 
-  /** Request to create a new check entry (requires manager approval). */
+  /** Request to create a new check entry (requires manager approval). Default type is 'work'; pass type: 'pause' with a workBreakId to request a past-day break. */
   async requestCreate(params: CheckRequestParams): Promise<{ id: string }> {
     return this.http.postData('/api/v3/check-request-for-create', {
       employeeId: this.config.employeeId,
-      type: 'work',
-      checkIn: params.checkIn,
-      checkOut: params.checkOut,
+      type: params.type ?? 'work',
+      checkIn: buildCheckTimestamp(params.checkIn),
+      checkOut: params.checkOut ? buildCheckTimestamp(params.checkOut) : undefined,
       comment: params.comment,
+      workBreakId: params.workBreakId,
     })
   }
 
@@ -232,8 +255,8 @@ export class ChecksModule {
       employeeId: this.config.employeeId,
       checkId,
       checkType: 'work',
-      checkIn: params.checkIn,
-      checkOut: params.checkOut,
+      checkIn: params.checkIn ? buildCheckTimestamp(params.checkIn) : undefined,
+      checkOut: params.checkOut ? buildCheckTimestamp(params.checkOut) : undefined,
       comment: params.comment,
     })
   }

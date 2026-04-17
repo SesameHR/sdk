@@ -311,7 +311,8 @@ sdk.checks.clockIn()
 sdk.checks.clockOut()
 sdk.checks.pause(breakId)
 sdk.checks.breaks()                           // → WorkBreak[]
-sdk.checks.requestCreate({ checkIn, checkOut })
+sdk.checks.requestCreate({ checkIn, checkOut })                             // work (default)
+sdk.checks.requestCreate({ checkIn, checkOut, type: 'pause', workBreakId }) // past-day break
 sdk.checks.requestEdit(checkId, { checkIn })
 sdk.checks.requestDelete(checkId)
 ```

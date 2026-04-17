@@ -188,14 +188,36 @@ describe('ChecksModule', () => {
     )
   })
 
-  it('requestCreate() posts with employee ID', async () => {
+  it('requestCreate() posts with employee ID and structured timestamp', async () => {
     await mod.requestCreate({ checkIn: '2026-03-25T08:00:00' })
     expect(http.postData).toHaveBeenCalledWith(
       '/api/v3/check-request-for-create',
       expect.objectContaining({
         employeeId: config.employeeId,
-        checkIn: '2026-03-25T08:00:00',
         type: 'work',
+        checkIn: expect.objectContaining({
+          date: expect.any(Number),
+          origin: 'request',
+          timezone: 'Europe/Madrid',
+        }),
+      }),
+    )
+  })
+
+  it('requestCreate() supports type="pause" with workBreakId', async () => {
+    await mod.requestCreate({
+      checkIn: '2026-03-25T13:00:00',
+      checkOut: '2026-03-25T14:00:00',
+      type: 'pause',
+      workBreakId: 'break-xyz',
+    })
+    expect(http.postData).toHaveBeenCalledWith(
+      '/api/v3/check-request-for-create',
+      expect.objectContaining({
+        type: 'pause',
+        workBreakId: 'break-xyz',
+        checkIn: expect.objectContaining({ origin: 'request', timezone: 'Europe/Madrid' }),
+        checkOut: expect.objectContaining({ origin: 'request', timezone: 'Europe/Madrid' }),
       }),
     )
   })
