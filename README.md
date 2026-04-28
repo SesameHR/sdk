@@ -44,6 +44,7 @@ Every method returns typed data. Here are the shapes you'll receive:
   office?: string        // "Madrid"
   jobCharge?: string     // "Software Engineer"
   code?: number
+  imageProfileURL?: string
 }
 ```
 
