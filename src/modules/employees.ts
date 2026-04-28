@@ -16,6 +16,7 @@ export interface Employee {
   office?: string
   jobCharge?: string
   code?: number
+  imageProfileURL?: string
 }
 
 export interface EmployeeGroupCount {
@@ -59,6 +60,7 @@ const BASE_SELECT: BiSelectField[] = [
   { field: 'core_context_office.name', alias: 'office' },
   { field: 'core_context_job_charge.name', alias: 'jobCharge' },
   { field: 'core_context_employee.code', alias: 'code' },
+  { field: 'core_context_employee.image_profile_url', alias: 'imageProfileURL' },
 ]
 
 /** Manage company employees — list, filter by status/department, search, and get counts. */
